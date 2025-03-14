@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Insync
+Exec="insync" %U
+Terminal=false
+Type=Application
+Icon=com.insynchq.Insync
+StartupWMClass=Insync
+Comment=Cross platform configuration tool for the ExpressLRS firmware
+Categories=Development;

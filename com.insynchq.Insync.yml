@@ -1,0 +1,43 @@
+app-id: com.insynchq.Insync
+runtime: org.kde.Platform
+runtime-version: "6.8"
+sdk: org.kde.Sdk
+base-version: "6.8"
+command: run.sh
+separate-locales: false
+rename-app-id: com.insynchq.Insync
+rename-desktop-file: insync.desktop
+rename-icon: insync
+desktop-file-name-suffix: " (Test)"
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --share=network
+  - --talk-name=org.kde.StatusNotifierWatcher
+modules:
+  - name: insync
+    buildsystem: simple
+    build-commands:
+      - ar x insync_*.deb
+      - rm insync_*.deb
+      - tar xf data.tar.gz
+      - mv usr/* $FLATPAK_DEST
+      - install -Dm644 com.insynchq.Insync.appdata.xml $FLATPAK_DEST/share/metainfo/com.insynchq.Insync.metainfo.xml
+      - install -Dm755 run.sh $FLATPAK_DEST/bin/run.sh
+    sources:
+      - type: file
+        only-arches:
+          - x86_64
+        url: https://cdn.insynchq.com/builds/linux/3.9.4.60020/insync_3.9.4.60020-bookworm_amd64.deb
+        x-checker-data:
+          type: anitya,
+          project-id: 301823,
+          url-template: https://cdn.insynchq.com/builds/linux/{version}/insync_{version}-bookworm_amd64.deb,
+          is-main-source: true
+        sha256: 32df8a7697deee8e1c1acb2fca9b84227109446f0c592d58dc0004bdec05c425
+      - type: file
+        path: com.insynchq.Insync.appdata.xml
+      - type: script
+        commands:
+          - exec /app/lib/insync/insync start --no-daemon
+        dest-filename: run.sh

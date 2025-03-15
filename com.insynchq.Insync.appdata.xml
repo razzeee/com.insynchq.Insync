@@ -14,7 +14,7 @@
   <keywords>
     <keyword>sync</keyword>
   </keywords>
-  <launchable type="desktop-id">com.insynchq.Insync.desktop</launchable>
+  <launchable type="desktop-id">insync.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/razzeee/com.insynchq.Insync/master/screenshots/expresslrs-configurator-1.png</image>

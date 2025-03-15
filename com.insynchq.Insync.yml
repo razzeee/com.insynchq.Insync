@@ -1,27 +1,53 @@
 app-id: com.insynchq.Insync
+base: io.qt.qtwebengine.BaseApp
 runtime: org.kde.Platform
-runtime-version: "6.8"
+runtime-version: "5.15-23.08"
 sdk: org.kde.Sdk
-base-version: "6.8"
+base-version: "5.15-23.08"
 command: run.sh
 separate-locales: false
 rename-app-id: com.insynchq.Insync
 rename-desktop-file: insync.desktop
 rename-icon: insync
 desktop-file-name-suffix: " (Test)"
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.llvm15
 finish-args:
   - --share=ipc
   - --socket=x11
   - --share=network
   - --talk-name=org.kde.StatusNotifierWatcher
 modules:
+  - shared-modules/glu/glu-9.json
+  - name: pyside2
+    buildsystem: cmake-ninja
+    builddir: true
+    build-options:
+      prepend-path: /usr/lib/sdk/llvm15/bin
+      prepend-ld-library-path: /usr/lib/sdk/llvm15/lib
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_TESTS=OFF
+    cleanup:
+      - /bin
+    sources:
+      - type: archive
+        url: https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-5.15.11-src/pyside-setup-opensource-src-5.15.11.tar.xz
+        sha256: da567cd3b7854d27a0b4afe3e89de8b2f98b7a6d57393be56f1fc13f770faf29
+      - type: patch
+        path: patches/pyside-webengine.patch
+      - type: shell
+        commands:
+          - mkdir -p /app/include/qt5tmp && cp -R /usr/include/Qt* /app/include/Qt* /app/include/qt5tmp # https://bugreports.qt.io/browse/PYSIDE-787
+          - sed -i 's|\(--include-paths=\)|\1/app/include/qt5tmp:|' sources/pyside2/cmake/Macros/PySideModules.cmake
   - name: insync
     buildsystem: simple
     build-commands:
       - ar x insync_*.deb
       - rm insync_*.deb
       - tar xf data.tar.gz
-      - mv usr/* $FLATPAK_DEST
+      - mv usr $FLATPAK_DEST
+      - cp -r $FLATPAK_DEST/usr/share $FLATPAK_DEST
       - install -Dm644 com.insynchq.Insync.appdata.xml $FLATPAK_DEST/share/metainfo/com.insynchq.Insync.metainfo.xml
       - install -Dm755 run.sh $FLATPAK_DEST/bin/run.sh
     sources:
@@ -29,15 +55,10 @@ modules:
         only-arches:
           - x86_64
         url: https://cdn.insynchq.com/builds/linux/3.9.4.60020/insync_3.9.4.60020-bookworm_amd64.deb
-        x-checker-data:
-          type: anitya,
-          project-id: 301823,
-          url-template: https://cdn.insynchq.com/builds/linux/{version}/insync_{version}-bookworm_amd64.deb,
-          is-main-source: true
         sha256: 32df8a7697deee8e1c1acb2fca9b84227109446f0c592d58dc0004bdec05c425
       - type: file
         path: com.insynchq.Insync.appdata.xml
       - type: script
         commands:
-          - exec /app/lib/insync/insync start --no-daemon
+          - exec /app/usr/lib/insync/insync start --no-daemon
         dest-filename: run.sh

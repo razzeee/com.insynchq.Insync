@@ -24,6 +24,7 @@ modules:
       - tar xf data.tar.gz
       - mv usr $FLATPAK_DEST
       - cp -r $FLATPAK_DEST/usr/share $FLATPAK_DEST
+      - desktop-file-edit --set-key=Exec --set-value="run.sh" $FLATPAK_DEST/share/applications/insync.desktop
       - install -Dm644 com.insynchq.Insync.appdata.xml $FLATPAK_DEST/share/metainfo/com.insynchq.Insync.metainfo.xml
       - install -Dm755 run.sh $FLATPAK_DEST/bin/run.sh
     sources:

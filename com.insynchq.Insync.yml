@@ -13,6 +13,7 @@ finish-args:
   - --socket=x11
   - --share=network
   - --talk-name=org.kde.StatusNotifierWatcher
+  - --filesystem=~/Insync
 build-options:
   strip: true
 modules:

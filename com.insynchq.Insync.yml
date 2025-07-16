@@ -13,7 +13,10 @@ finish-args:
   - --socket=x11
   - --share=network
   - --talk-name=org.kde.StatusNotifierWatcher
+  # Needed for /duv/disk/by-id which insync accesses
+  - --device=all
   - --filesystem=~/Insync
+  - --filesystem=~/.config/Insync
 build-options:
   strip: true
 modules:

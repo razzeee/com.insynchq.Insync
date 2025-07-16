@@ -17,7 +17,8 @@ finish-args:
   # Needed for /dev/disk/by-id which insync accesses
   - --device=all
   - --filesystem=~/Insync
-  - --filesystem=~/.config/Insync
+  - --filesystem=xdg-config/Insync
+  - --filesystem=xdg-config/autostart:create
 build-options:
   strip: true
 modules:
